@@ -101,7 +101,7 @@ export default function CashierDashboard() {
     }
   }
 
-  // DIUBAH: Otomatis mengisi state transaksi terakhir dan memicu window.print() saat sukses
+  // BERHASIL DIPERBAIKI: Menambahkan : any pada parameter item agar TypeScript tidak error saat build
   const handleCheckout = async () => {
     if (!customerName || loadingQueue || items.length === 0) {
       alert("⚠️ Mohon lengkapi Nama Pelanggan dan pilih Menu terlebih dahulu!")
@@ -109,7 +109,7 @@ export default function CashierDashboard() {
     }
     setIsLoading(true)
     try {
-      const orderItemsSummary = items.map(item => ({
+      const orderItemsSummary = items.map((item: any) => ({
         id: item.id,
         nama: item.nama || item.name, 
         qty: item.qty,
@@ -311,7 +311,7 @@ export default function CashierDashboard() {
                     <ShoppingCart size={32} strokeWidth={1.5} />
                     <p className="text-[10px] font-bold mt-1 uppercase tracking-wider">Belum Ada Item</p>
                   </div>
-                ) : items.map(item => (
+                ) : items.map((item: any) => (
                   <div key={item.id} className="flex justify-between items-center p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
                     <div>
                       <h5 className="font-black text-xs text-slate-700 uppercase">{item.nama || item.name}</h5>

@@ -101,7 +101,6 @@ export default function CashierDashboard() {
     }
   }
 
-  // BERHASIL DIPERBAIKI: Menambahkan : any pada parameter item agar TypeScript tidak error saat build
   const handleCheckout = async () => {
     if (!customerName || loadingQueue || items.length === 0) {
       alert("⚠️ Mohon lengkapi Nama Pelanggan dan pilih Menu terlebih dahulu!")
@@ -117,7 +116,6 @@ export default function CashierDashboard() {
         subtotal: (item.harga || item.price) * item.qty
       }))
 
-      // Ditambahkan .select().single() agar kita mendapat data baris yang baru saja masuk (termasuk ID dan dibuat_at otomatis dari DB)
       const { data: insertedData, error: trxErr } = await supabase
         .from('transaksi')
         .insert([{
@@ -134,13 +132,25 @@ export default function CashierDashboard() {
 
       if (trxErr) throw trxErr
 
-      // Simpan data transaksi ke state untuk dibaca oleh HTML struk cetak
+      // Simpan data transaksi ke state agar komponen struk ter-render HTML-nya
       setTransaksiTerakhir(insertedData)
 
-      // Picu proses print bawaan browser dengan delay tipis agar komponen HTML struk selesai render
-      setTimeout(() => {
-        window.print()
-      }, 300)
+      // PERBAIKAN UTAMA: Memaksa browser me-load gambar logo sampai selesai sebelum cetak dimulai
+      const img = new Image()
+      img.src = "/logo-bhanu.png"
+      img.onload = () => {
+        // Jalankan cetak hanya ketika gambar terbukti sudah selesai di-load 100% oleh browser
+        setTimeout(() => {
+          window.print()
+        }, 300)
+      }
+      img.onerror = () => {
+        // Jika gambar gagal di-load (opsi cadangan agar aplikasi tidak macet)
+        console.error("Gagal memuat logo struk, mencetak tanpa logo...")
+        setTimeout(() => {
+          window.print()
+        }, 300)
+      }
       
       clearCart()
       setCustomerName('')
@@ -187,8 +197,8 @@ export default function CashierDashboard() {
 
     const worksheet = XLSX.utils.json_to_sheet(formatDataExcel)
     const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Laporan Kasir')
-    XLSX.writeFile(workbook, `Laporan_Pempek_Bhanu_${new Date().toISOString().split('T')[0]}.xlsx`)
+    XXLSX.utils.book_append_sheet(workbook, worksheet, 'Laporan Kasir')
+    XXLSX.writeFile(workbook, `Laporan_Pempek_Bhanu_${new Date().toISOString().split('T')[0]}.xlsx`)
   }
 
   return (

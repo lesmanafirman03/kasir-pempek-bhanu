@@ -24,3 +24,83 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ==========================================================================
+   STYLING UTILITY TAMBAHAN (Amankan dengan @utility agar tidak crash di v4)
+   ========================================================================== */
+
+@utility print-struk-setup {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.15;
+}
+
+/* ==========================================================================
+   STYLING KHUSUS UNTUK STRUK PRINTER THERMAL (MEDIA PRINT)
+   ========================================================================== */
+@media print {
+  /* Sembunyikan semua elemen dashboard kasir di layar saat cetak */
+  body *, html * {
+    visibility: hidden;
+  }
+  
+  /* Tampilkan hanya area komponen struk pembayaran */
+  #struk-pembayaran, 
+  #struk-pembayaran * {
+    visibility: visible;
+  }
+  
+  /* KONFIGURASI UKURAN HURUF & KETEBALAN TEKS STRUK */
+  #struk-pembayaran {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 58mm;
+    padding: 0;
+    margin: 0;
+    background: white;
+    color: #000000 !important;
+    
+    /* Menggunakan font sans-serif agar karakter huruf lebih padat & tebal */
+    font-family: Arial, Helvetica, sans-serif !important; 
+    font-size: 13px !important;       /* Menaikkan ukuran dasar teks struk */
+    font-weight: 700 !important;       /* Memaksa seluruh teks struk menjadi TEBAL (Bold) */
+    line-height: 1.15 !important;      /* Jarak antar baris yang rapat dan pas */
+    letter-spacing: -0.2px !important; /* Merapatkan teks sedikit agar tidak terpotong margin kanan */
+  }
+
+  /* Pertegas teks judul/total yang harus ekstra besar */
+  #struk-pembayaran .text-xl,
+  #struk-pembayaran .text-lg,
+  #struk-pembayaran h2,
+  #struk-pembayaran .font-bold {
+    font-size: 15px !important;
+    font-weight: 900 !important; /* Ketebalan maksimal */
+  }
+
+  /* Bikin garis putus-putus pembatas (Border) jadi hitam pekat saat diprint */
+  #struk-pembayaran [class*="border-dash"],
+  #struk-pembayaran .border-dashed {
+    border-color: #000000 !important;
+    border-width: 1.5px !important;
+  }
+
+  /* PAKSA LOGO MENJADI HITAM PUTIH TOTAL & KONTRAS TINGGI */
+  #struk-pembayaran img {
+    /* Mengubah gambar menjadi grayscale dengan kontras tinggi agar tidak buram di printer thermal */
+    filter: grayscale(100%) contrast(180%) brightness(85%) !important;
+    
+    /* Memaksa browser menerapkan efek filter warna pada mode cetak */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    
+    /* Menghilangkan background warna jika ada efek transparansi */
+    mix-blend-mode: multiply !important; 
+  }
+
+  /* Atur ukuran kertas otomatis roll thermal 58mm */
+  @page {
+    size: 58mm auto;
+    margin: 0;
+  }
+}

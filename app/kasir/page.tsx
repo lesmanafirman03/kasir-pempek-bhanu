@@ -197,8 +197,8 @@ export default function CashierDashboard() {
 
     const worksheet = XLSX.utils.json_to_sheet(formatDataExcel)
     const workbook = XLSX.utils.book_new()
-    XXLSX.utils.book_append_sheet(workbook, worksheet, 'Laporan Kasir')
-    XXLSX.writeFile(workbook, `Laporan_Pempek_Bhanu_${new Date().toISOString().split('T')[0]}.xlsx`)
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Laporan Kasir')
+    XLSX.writeFile(workbook, `Laporan_Pempek_Bhanu_${new Date().toISOString().split('T')[0]}.xlsx`)
   }
 
   return (
@@ -397,7 +397,7 @@ export default function CashierDashboard() {
         {/* TAB 3: LAPORAN */}
         {activeTab === 'laporan' && (
           <div className="p-4 lg:p-6 flex flex-col h-full overflow-y-auto lg:overflow-hidden gap-4">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 lg:p-5 rounded-2xl shadow-sm border-l-4 border-[#FFED00] gap-3">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 lg:p-5 rounded-2xl shadow-sm border-l-4 border-l-[#FFED00] gap-3">
               <div>
                 <h3 className="font-black text-xs uppercase tracking-wider text-[#0F4C92]">Dashboard Omset Penjualan</h3>
                 <p className="text-xs text-slate-400 font-bold mt-1">Total Pendapatan: <span className="font-black text-[#E30613] text-sm lg:text-base">Rp {transactions.reduce((sum, t) => sum + (t.total_pembayaran || t.total_amount || 0), 0).toLocaleString('id-ID')}</span> ({transactions.length} Nota)</p>
